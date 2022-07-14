@@ -4,17 +4,17 @@
 
 #include "Room.h"
 
-namespace Chat {
+namespace chat {
 
-	int Chat::Room::max_ID = 0;
+	int chat::Room::max_ID = 0;
 
 	Room Room::operator=(Room room)
 	{
-		ID = room.ID;
-		user_1_ID = room.user_1_ID;
-		user_2_ID = room.user_2_ID;
-		is_private = room.is_private;
-		message_ID = room.message_ID;
+		_ID = room._ID;
+		_user_1_ID = room._user_1_ID;
+		_user_2_ID = room._user_2_ID;
+		_is_private = room._is_private;
+		_message_ID = room._message_ID;
 
 		return *this;
 	}
