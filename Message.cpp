@@ -5,15 +5,15 @@
 #include "Message.h"
 #include "Interface.h"
 
-namespace Chat {
+namespace chat {
 
-	int Chat::Message::max_ID = 0;
+	int chat::Message::max_ID = 0;
 
 	Message Message::operator=(Message msg)
 	{
-		ID = msg.ID;
-		user_ID = msg.user_ID;
-		text = msg.text;
+		_ID = msg._ID;
+		_user_ID = msg._user_ID;
+		_text = msg._text;
 
 		return *this;
 	}
