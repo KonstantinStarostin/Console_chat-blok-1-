@@ -5,24 +5,24 @@
 #include "User.h"
 #include "Interface.h"
 
-namespace Chat {
+namespace chat {
 
-	int Chat::User::max_ID = 0;
+	int chat::User::max_ID = 0;
 
 	// register user with valid name & password
 	bool User::reg() {
-		if (is_reg)
+		if (_is_reg)
 			return false;
 		
-		ID = max_ID + 1;
+		_ID = max_ID + 1;
 		max_ID++;
-		is_reg = true;
+		_is_reg = true;
 
 		return true;
 	}
 
-	bool User::set_name(const std::vector<Chat::User>* all_users) {
-		std::string str = "";
+	bool User::set_name(const std::vector<chat::User>& all_users) {
+		std::string str;
 		do {
 			user_name_req();
 			std::cout << "Input user name:  ";
@@ -30,22 +30,23 @@ namespace Chat {
 		} while (!set_name(str, all_users));
 		return true;
 	}
-	bool User::set_name(std::string _name, const std::vector<Chat::User>* all_users) {
-		if (!uniq_user_name(_name, all_users)) {
-			std::cout << "User name \"" << _name << "\" already exist!\n"
+	
+	bool User::set_name(const std::string& name, const std::vector<chat::User>& all_users) {
+		if (!uniq_user_name(name, all_users)) {
+			std::cout << "User name \"" << name << "\" already exist!\n"
 				<< "Enter another user name!\n";
 			return false;
 		}
-		if (!user_name_valid(_name)) {
+		if (!user_name_valid(name)) {
 			std::cout << "Invalid user name!\n";
 			return false;
 		}
-		name = _name;
+		_name = name;
 		return true;
 	}
 
 	bool User::set_pass() {
-		std::string str = "";
+		std::string str;
 		do {
 			user_pass_req();
 			std::cout << "Input password:  ";
@@ -53,8 +54,9 @@ namespace Chat {
 		} while (!set_pass(str));
 		return true;
 	}
-	bool User::set_pass(std::string _pass) {
-		if (pass != "") {
+	
+	bool User::set_pass(const std::string& pass) {
+		if (_pass != "") {
 			std::cout << "Password already exist!\n"
 				<< "Do you want to change it?\n";
 			bool flag = true;
@@ -62,12 +64,12 @@ namespace Chat {
 				std::cout << "Input \">>yes\" or \">>no\" command:  ";
 				std::string str;
 				std::cin >> str;
-				Interface::Command cmd = Interface::get_command(str);
+				interface::Command cmd = interface::get_command(str);
 				switch (cmd) {
-				case Interface::Command::YES:
+				case interface::Command::YES:
 					flag = false;
 					break;
-				case Interface::Command::NO:
+				case interface::Command::NO:
 					std::cout << "Password didn't changed\n";
 					return true;
 				default:
@@ -75,9 +77,9 @@ namespace Chat {
 				}
 			}
 		}
-		if (!user_pass_valid(_pass))
+		if (!user_pass_valid(pass))
 			return false;
-		pass = _pass;
+		_pass = pass;
 		return true;
 	}
 
@@ -92,15 +94,27 @@ namespace Chat {
 	void User::print_pass() { std::cout << "User pass: " << pass << std::endl; }*/
 	//
 	
+	User User::operator=(User user)
+	{
+		_ID = user._ID;
+		_name = user._name;
+		_pass = user._pass;
+		_is_reg = user._is_reg;
+
+		return *this;
+	}
+	
 	// auxiliary function to work with name & password
-	bool uniq_user_name(std::string str, const std::vector<Chat::User>* all_users) {
-		for (int i = 0; i < all_users->size(); i++)
-			if (str == (*all_users)[i].get_name())
+	bool uniq_user_name(const std::string& str, const std::vector<chat::User>& all_users) {
+		
+		for (const auto& all_user : all_users)
+			if (str == all_user.get_name())
 				return false;
 		return true;
+		
 	}
 
-	bool user_name_valid(std::string str) {
+	bool user_name_valid(const std::string& str) {
 		if (str.length() > 0 && str[0] == '>') return false;
 		if (str.length() > 1 && str[0] == '>' && str[1] == '>') return false;
 
@@ -111,7 +125,7 @@ namespace Chat {
 		std::cout << "User name can\'t start from \'>\' or \'>>\'!\n";
 	}
 
-	bool user_pass_valid(std::string str) {
+	bool user_pass_valid(const std::string& str) {
 		if (str.length() < 8)
 			return false;
 
@@ -121,19 +135,19 @@ namespace Chat {
 		int spec_simbol = 0;
 
 		for (int i = 0; i < str.size(); i++) {
-			if (Interface::char_is_A_simbol(str[i])) {
+			if (interface::char_is_A_simbol(str[i])) {
 				A_simbol++;
 				continue;
 			}
-			if (Interface::char_is_a_simbol(str[i])) {
+			if (interface::char_is_a_simbol(str[i])) {
 				a_simbol++;
 				continue;
 			}
-			if (Interface::char_is_num_simbol(str[i])) {
+			if (interface::char_is_num_simbol(str[i])) {
 				num_simbol++;
 				continue;
 			}
-			if (Interface::char_is_spec_simbol(str[i])) {
+			if (interface::char_is_spec_simbol(str[i])) {
 				spec_simbol++;
 				continue;
 			}
@@ -149,15 +163,9 @@ namespace Chat {
 		std::cout << "Password must be no less then 8 simbols" << std::endl
 			<< "and contain upper-case & lower-case letters, numbers & special simbols\n";
 	}
+	
 
-	User User::operator=(User user)
-	{
-		ID = user.ID;
-		name = user.name;
-		pass = user.pass;
-		is_reg = user.is_reg;
 
-		return *this;
-	}
 }
+
 	
