@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Interface {
+namespace interface {
 
     // commands to manage with console interface
     enum class Command {YES, NO, REG, LOGIN, CHANGE, ROOM, USER, NAME, PASSWORD, ALL,
